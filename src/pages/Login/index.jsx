@@ -81,14 +81,10 @@ const Login = () => {
         <div className={styles.top}>
           <div className={styles.header}>
             <Link to="/">
-              <img alt="logo" className={styles.logo} src="/和府logo.jfif" />
+              <span className={styles.title}>和府捞面</span>
             </Link>
           </div>
-          <div className={styles.desc}>
-            {intl.formatMessage({
-              id: 'pages.layouts.userLayout.title',
-            })}
-          </div>
+
         </div>
 
         <div className={styles.main}>

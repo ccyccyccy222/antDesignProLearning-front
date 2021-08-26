@@ -11,6 +11,7 @@ async function getFakeCaptcha(req, res) {
   return res.json('captcha-xxx');
 }
 
+//process.env就是Nodejs提供的一个API，它返回一个包含用户环境信息的对象
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
 /**
  * 当前用户的权限，如果为空代表没登录
@@ -38,12 +39,11 @@ export default {
       });
       return;
     }
-
     res.send({
       success: true,
       data: {
-        name: 'Serati Ma',
-        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+        name: '陈总经理',
+        avatar: "https://thirdwx.qlogo.cn/mmopen/vi_32/nOs9YyFciaKICAA83zNdy4fyzjn0UaSG7cZKLlmCwdXrF26hsLPPx4rFe5K2RYiamiaJkTPpfcpQ8C2hadGuPM2pw/132",
         userid: '00000001',
         email: 'antdesign@alipay.com',
         signature: '海纳百川，有容乃大',

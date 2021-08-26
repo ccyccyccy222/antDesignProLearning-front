@@ -1,21 +1,16 @@
 export default [
   {
-    path: '/'
+    path: '/',
+    redirect:'/food'
   },
+  {name:'food',
+    path: '/food',
+  component: './Food'},
   {
-    path: '/user',
+    path: '/login',
     layout: false,
+    component: './Login',
     routes: [
-      {
-        path: '/user',
-        routes: [
-          {
-            name: 'login',
-            path: '/user/login',
-            component: './user/Login',
-          },
-        ],
-      },
       {
         component: './404',
       },
