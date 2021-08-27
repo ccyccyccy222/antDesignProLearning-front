@@ -71,3 +71,13 @@ export async function removeRule(options) {
     ...(options || {}),
   });
 }
+
+
+//获取菜单
+export async function getFoodList(options) {
+  return request('/api/food', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
