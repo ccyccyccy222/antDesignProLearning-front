@@ -16,5 +16,15 @@ export default {
         name:"经典酸辣汤猪小排面",
         imgUrl:'https://i.loli.net/2021/08/26/Wd6yVPxYa2BK94R.png'
       }
-    ]
+    ],
+  'POST /api/food/add':async (req, res) => {
+    console.log(req)
+    res.send({
+      "name": "xxx.png",
+      "status": "done",
+      "url": "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+      "thumbUrl": "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+    });
+
+  }
 }

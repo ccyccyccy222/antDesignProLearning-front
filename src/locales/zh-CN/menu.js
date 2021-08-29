@@ -1,6 +1,10 @@
 export default {
   'menu.welcome': '欢迎',
   'menu.food': '菜品管理',
+  'menu.material': '原材料管理',
+  'menu.material.list': '原材料列表',
+  'menu.material.history': '原材料修改历史',
+  'menu.takeout': '外卖管理',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',
   'menu.admin': '管理页',
