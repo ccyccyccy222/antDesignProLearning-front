@@ -81,3 +81,10 @@ export async function getFoodList(options) {
   });
 }
 
+//获取原材料菜单
+export async function getMaterialList(options){
+  return request('/api/materialList',{
+    method:'GET',
+    ...(options||{})
+  })
+}

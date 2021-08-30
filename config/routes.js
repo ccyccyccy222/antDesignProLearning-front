@@ -1,7 +1,7 @@
 export default [
   {
     path: '/',
-    redirect: '/food',
+    redirect: '/login',
   },
   {
     name: 'food',
