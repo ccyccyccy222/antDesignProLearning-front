@@ -21,7 +21,11 @@ const filterData=(data,type)=>{
       break;
     case 1:
       // 表示已送出列表
-      result= data.filter(item=>item.state>=2)
+      result= data.filter(item=>item.state>=2&&item.state<4)
+      break;
+    case 2:
+      // 表示异常列表
+      result= data.filter(item=>item.state>=4)
       break;
     default:
       break
@@ -67,14 +71,39 @@ const takeout = () => {
     }
   }
 
-  function showConfirm(key,state) {
+
+  function showConfirm(key,state,type) {
+    // type=0表示接单及送出
     let title=''
+    let newState=state
     switch (state){
       case 0:
+        // eslint-disable-next-line no-param-reassign
+        newState+=1
         title='确定接单？'
         break
       case 1:
+        // eslint-disable-next-line no-param-reassign
+        newState+=1
         title='确定已送出？'
+        break
+      case 4:
+        switch (type){
+          case 1:
+        //    表示确定退款
+            // eslint-disable-next-line no-param-reassign
+            newState=5
+            title='确定退款？'
+            break
+          case 2:
+        //    表示取消退款
+            // eslint-disable-next-line no-param-reassign
+            newState=6
+            title='确定不退款？'
+            break
+          default:
+            break
+        }
         break
       default:
         break
@@ -85,7 +114,7 @@ const takeout = () => {
       onOk() {
         // eslint-disable-next-line no-console
         console.log('OK');
-        changeState(key,state+1)
+        changeState(key,newState)
       }
     });
   }
@@ -99,7 +128,7 @@ const takeout = () => {
     {title: '订单', dataIndex: 'order', key: 'order'},
     {
       title: '状态', dataIndex: 'state', key: 'state',
-      //  0表示待接单，1表示待送出，2表示已送出，3表示用户已收到
+      //  0表示待接单，1表示待送出，2表示已送出，3表示用户已收到,4表示用户申请退款且未处理，5表示用户申请退款且已处理
       render: (_,record) => {
         let color=''
         let content=''
@@ -127,7 +156,7 @@ const takeout = () => {
         const {state} = record
         return(
           <a
-            onClick={()=>showConfirm(record.key,record.state)}
+            onClick={()=>showConfirm(record.key,record.state,0)}
           >
             {state>0?'点击送出':'点击接单'}</a>
         )
@@ -144,7 +173,7 @@ const takeout = () => {
     {title: '订单', dataIndex: 'order', key: 'order'},
     {
       title: '状态', dataIndex: 'state', key: 'state',
-      //  0表示待接单，1表示待送出，2表示已送出，3表示用户已收到
+      //  0表示待接单，1表示待送出，2表示已送出，3表示用户已收到,4表示用户申请退款且未处理，5表示用户申请退款且已处理
       render: (_,record) => {
         let color=''
         let content=''
@@ -167,6 +196,33 @@ const takeout = () => {
     {title: '评价', dataIndex: 'comment', key: 'comment'},
   ];
 
+  const columnError = [
+    {title: '时间', dataIndex: 'date', key: 'date'},
+    {
+      title: '顾客', dataIndex: 'customer', key: 'customer',
+    },
+    {title: '平台', dataIndex: 'platform', key: 'platform'},
+    {title: '订单', dataIndex: 'order', key: 'order'},
+    {title: '取消订单原因', dataIndex: 'refundReason', key: 'refundReason'},
+    {
+      title: '退款处理', dataIndex: 'state', key: 'state',
+      //  0表示待接单，1表示待送出，2表示已送出，3表示用户已收到，4表示用户申请退款且未处理，5表示用户申请退款且已退款,，6表示用户申请退款但不退款
+      render: (_,record) => {
+        let result=(<p>state error</p>)
+        if(record.state===4){
+          result=(<div>
+            <a style={{marginRight:15}} onClick={()=>showConfirm(record.key,record.state,1)}>确认退款</a>
+            <a onClick={()=>showConfirm(record.key,record.state,2)}>取消退款</a>
+          </div>)
+        }else if(record.state===5){
+            result=(<p>已退款</p>)
+        }else if(record.state===6){
+          result=(<p>已取消退款</p>)
+        }
+        return result
+      },
+    },
+  ];
 
   return (
     <Tabs defaultActiveKey="1" onChange={callback}>
@@ -182,7 +238,6 @@ const takeout = () => {
       </TabPane>
 
       <TabPane tab="历史记录" key="2">
-
         <Table
           columns={columnHistory}
           dataSource={filterData(data,1).sort((a, b)=> {
@@ -190,10 +245,15 @@ const takeout = () => {
           })}
           style={{whiteSpace:'pre'}}
         />
-
       </TabPane>
       <TabPane tab="异常处理" key="3">
-        Content of Tab Pane 3
+        <Table
+          columns={columnError}
+          dataSource={filterData(data,2).sort((a, b)=> {
+            return a.state - b.state;
+          })}
+          style={{whiteSpace:'pre'}}
+        />
       </TabPane>
     </Tabs>
   );
