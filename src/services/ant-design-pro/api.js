@@ -102,3 +102,25 @@ export async function updateMaterialList(body,options){
     ...(options || {}),
   })
 }
+
+//请求外卖列表
+export async function getTakeoutList(options) {
+  return request('/api/takeoutList', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+//修改外卖菜单
+export async function updateTakeoutList(body,options){
+  console.log(body)
+  return request('/api/updateTakeoutList',{
+    //修改一般使用put
+    method:'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
