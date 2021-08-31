@@ -1,9 +1,5 @@
 export default [
   {
-    path: '/',
-    redirect: '/login',
-  },
-  {
     name: 'food',
     icon: 'CoffeeOutlined',
     path: '/food',
@@ -30,6 +26,10 @@ export default [
         component: './404',
       },
     ],
+  },
+  {
+    path: '/',
+    redirect:'/food'
   },
   {
     component: './404',

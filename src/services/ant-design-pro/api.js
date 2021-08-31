@@ -88,3 +88,17 @@ export async function getMaterialList(options){
     ...(options||{})
   })
 }
+
+//修改原材料菜单
+export async function updateMaterialList(body,options){
+  console.log(body)
+  return request('/api/updateMaterialList',{
+    //修改一般使用put
+    method:'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
