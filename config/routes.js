@@ -18,6 +18,29 @@ export default [
     component: './Takeout',
   },
   {
+    name: 'cost',
+    icon: 'DollarOutlined',
+    path: '/cost',
+    routes: [
+      {
+        name: 'laborCost',
+        path: '/cost/laborCost',
+        component: './cost/LaborCost'
+      },
+      {
+        name: 'utilities',
+        path: '/cost/utilities',
+        component: './cost/Utilities'
+      },
+      {
+        name: 'materialCost',
+        path: '/cost/materialCost',
+        component: './cost/MaterialCost'
+      },
+
+    ]
+  },
+  {
     path: '/login',
     layout: false,
     component: './Login',
@@ -29,7 +52,7 @@ export default [
   },
   {
     path: '/',
-    redirect:'/food'
+    redirect: '/food'
   },
   {
     component: './404',
