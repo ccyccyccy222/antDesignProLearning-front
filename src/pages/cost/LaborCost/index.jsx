@@ -23,9 +23,15 @@ const laborCost = () => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isModalVisible, setIsModalVisible] = useState(false);
-
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [laborId, setLaborId] = useState('000021');
+  const [data, setData] = useState([])
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [ifFilter, setIfFilter] = useState(false);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [filterData, setFilterData] = useState(data);
+
+
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [baseSalary, setBaseSalary] = useState(0);
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -44,8 +50,7 @@ const laborCost = () => {
   const [otherAllowance, setOtherAllowance] = useState(0);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [totalSalary, setTotalSalary] = useState(0);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [data, setData] = useState([])
+
 
   // eslint-disable-next-line react-hooks/rules-of-hooks,react-hooks/exhaustive-deps
   useEffect(async () => {
@@ -81,6 +86,32 @@ const laborCost = () => {
     const res=await updateLaborList(values)
     setData(res.list)
     return res
+  }
+
+  // 模糊查询
+  const fuzzyQuery=(list,keyword)=>{
+    const arr=[]
+    for(let i=0;i<list.length;i+=1){
+      if(list[i].name.indexOf(keyword)>=0){
+        arr.push(list[i]);
+      }
+    }
+    return arr;
+  }
+
+  // 处理查找
+  const inputChange=(event)=>{
+    // 使用过滤后的数据
+    setIfFilter(true)
+    const {value} = event.target
+    if(value===''){
+      setIfFilter(false)
+      setFilterData(data)
+    }else{
+      //  进行模糊搜索
+      const newData=fuzzyQuery(data,value)
+      setFilterData(newData)
+    }
   }
 
   // 处理模态框
@@ -302,7 +333,7 @@ const laborCost = () => {
       <div className={styles.tableHead}>
         <Search placeholder="请输入查询的员工姓名"
                 enterButton
-          // onChange={inputChange}
+                onChange={inputChange}
                 style={{width: 300, marginRight: 15}}/>
         <Button type="primary" onClick={() => {
           const record = {
@@ -326,7 +357,7 @@ const laborCost = () => {
       </div>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={ifFilter?filterData:data}
         bordered
         size="middle"
       />,
@@ -345,7 +376,7 @@ const laborCost = () => {
             name="laborId"
             label="员工编号"
           >
-            <span className="ant-form-text">{laborId}</span>
+            <span className="ant-form-text">{`0000${data.length+1}`}</span>
           </Form.Item>
           <Form.Item
             name="name"
