@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Form, Input, InputNumber, Modal, Select, Table,Radio} from 'antd';
+import {Button, Form, Input, InputNumber, Modal, Select, Table, Radio} from 'antd';
 import useForm from "antd/es/form/hooks/useForm";
 import styles from "@/pages/Material/index.less";
 
@@ -22,6 +22,47 @@ const laborCost = () => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isModalVisible, setIsModalVisible] = useState(false);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [baseSalary, setBaseSalary] = useState(0);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [timeOff, setTimeOff] = useState(0);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [otherOff, setOtherOff] = useState(0);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [handSalary, setHandSalary] = useState(0);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [overTimeAllowance, setOverTimeAllowance] = useState(0);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [socialSecurity, setSocialSecurity] = useState(0);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [mealAllowance, setMealAllowance] = useState(0);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [otherAllowance, setOtherAllowance] = useState(0);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [totalSalary, setTotalSalary] = useState(0);
+
+  // 自动计算总工资
+  const sumTotalSalary=(a,b,c,d)=>{
+    //  应到账工资+餐补+社保+其他补贴
+    // eslint-disable-next-line no-console
+    console.log("handSalary:", a, ";mealAllowance:", b, ";socialSecurity:", c,';otherAllowance:',d)
+    const newTotalSalary=a+b+c+d
+    form.setFieldsValue({"totalSalary": newTotalSalary})
+    setTotalSalary(newTotalSalary)
+  }
+
+  // 自动计算应到账工资
+  const sumHandSalary = (a, b, c,d) => {
+    //  基本工资-扣款项+加班补贴
+    // eslint-disable-next-line no-console
+    console.log("baseSalary:", a, ";timeOff:", b, ";otherOff:", c,";overTimeAllowance:",d)
+    const newHandSalary = a - b - c+d
+    sumTotalSalary(newHandSalary,mealAllowance,socialSecurity,otherAllowance)
+    form.setFieldsValue({"handSalary": newHandSalary})
+    setHandSalary(newHandSalary)
+  }
+
+
 
 
   // 处理模态框
@@ -153,7 +194,9 @@ const laborCost = () => {
       title: '是否入账',
       dataIndex: 'toAccount',
       key: 'toAccount',
-      render: (_, record) =>{return(record.toAccount===true?'是':'否')},
+      render: (_, record) => {
+        return (record.toAccount === true ? '是' : '否')
+      },
     },
     {
       title: '更新时间',
@@ -167,6 +210,15 @@ const laborCost = () => {
       render: (_, record) => <a onClick={() => {
         // eslint-disable-next-line no-console
         console.log(record)
+        setMealAllowance(record.mealAllowance)
+        setSocialSecurity(record.socialSecurity)
+        setOtherAllowance(record.otherAllowance)
+        setOverTimeAllowance(record.overTimeAllowance)
+        setTotalSalary(record.totalSalary)
+        setBaseSalary(record.baseSalary)
+        setTimeOff(record.timeOff)
+        setOtherOff(record.otherOff)
+        setHandSalary(record.handSalary)
         form.setFieldsValue(record)
         showModal()
       }}>
@@ -177,27 +229,26 @@ const laborCost = () => {
   const data = [];
   for (let i = 1; i < 20; i += 1) {
     let id
-    if(i<10) {
-      id=`00000${i}`
-    }
-    else id=`0000${i}`
-     const name=`ccy${i}`
+    if (i < 10) {
+      id = `00000${i}`
+    } else id = `0000${i}`
+    const name = `ccy${i}`
     data.push({
-      key:i,
-      laborId:id,
+      key: i,
+      laborId: id,
       name,
-      position:'服务员',
-      baseSalary:3000,
-      overTimeAllowance:0,
-      mealAllowance:800,
-      otherAllowance:0,
-      socialSecurity:150,
-      timeOff:0,
-      otherOff:0,
-      totalSalary:3950,
-      handSalary:3000,
-      toAccount:false,
-      updateTime:'2021-8-24 23:12:01'
+      position: '服务员',
+      baseSalary: 3000,
+      overTimeAllowance: 0,
+      mealAllowance: 800,
+      otherAllowance: 0,
+      socialSecurity: 150,
+      timeOff: 0,
+      otherOff: 0,
+      totalSalary: 3950,
+      handSalary: 3000,
+      toAccount: false,
+      updateTime: '2021-8-24 23:12:01'
     });
   }
 
@@ -206,15 +257,14 @@ const laborCost = () => {
       <div className={styles.tableHead}>
         <Search placeholder="请输入查询的员工姓名"
                 enterButton
-                // onChange={inputChange}
+          // onChange={inputChange}
                 style={{width: 300, marginRight: 15}}/>
-        <Button type="primary" onClick={() =>
-        {
-          const record={
-            name:'',
-            type:'',
-            unit:'',
-            remaining:0
+        <Button type="primary" onClick={() => {
+          const record = {
+            name: '',
+            type: '',
+            unit: '',
+            remaining: 0
           }
           form.setFieldsValue(record)
           showModal()
@@ -234,19 +284,14 @@ const laborCost = () => {
           form={form}
           name="form"
           {...formItemLayout}
+          style={{whiteSpace:'pre'}}
           // onFinish={handleOk}
         >
           <Form.Item
             name="laborId"
             label="员工编号"
-            rules={[
-              {
-                required: true,
-                message: '请输入员工编号',
-              },
-            ]}
           >
-            <Input placeholder="请输入员工编号"/>
+            <span className="ant-form-text">{`${totalSalary}\t（基本工资+所有补贴-所有扣款）`}</span>
           </Form.Item>
           <Form.Item
             name="name"
@@ -282,47 +327,75 @@ const laborCost = () => {
 
           <Form.Item label="基本工资" name="baseSalary"
                      rules={[{required: true, message: '请输入基本工资'}]}>
-            <InputNumber min={0} max={1000000}/>
+            <InputNumber min={0} max={1000000}
+                         onChange={(value) => {
+                           setBaseSalary(value)
+                           sumHandSalary(value, timeOff, otherOff,overTimeAllowance)
+                         }}/>
           </Form.Item>
 
           <Form.Item label="加班补贴" name="overTimeAllowance"
                      rules={[{required: true, message: '请输入加班补贴'}]}>
-            <InputNumber min={0} max={1000000}/>
+            <InputNumber min={0} max={1000000} onChange={(value) => {
+              setOverTimeAllowance(value)
+              sumHandSalary(baseSalary, timeOff, otherOff,value)
+            }}/>
           </Form.Item>
 
           <Form.Item label="餐补" name="mealAllowance"
                      rules={[{required: true, message: '请输入餐补'}]}>
-            <InputNumber min={0} max={1000000}/>
+            <InputNumber min={0} max={1000000}
+                         onChange={(value) => {
+                           setMealAllowance(value)
+                           sumTotalSalary(handSalary, value, socialSecurity,otherAllowance)
+                         }}/>
           </Form.Item>
 
           <Form.Item label="社保" name="baseSalary" rules={[{required: true, message: '请输入社保'}]}>
-            <InputNumber min={0} max={1000000}/>
+            <InputNumber min={0} max={1000000}
+                         onChange={(value) => {
+                           setSocialSecurity(value)
+                           sumTotalSalary(handSalary, mealAllowance, value,otherAllowance)
+                         }}/>
           </Form.Item>
 
           <Form.Item label="其他补贴" name="socialSecurity"
                      rules={[{required: true, message: '请输入其他补贴'}]}>
-            <InputNumber min={0} max={1000000}/>
+            <InputNumber min={0} max={1000000}
+                         onChange={(value) => {
+                           setOtherAllowance(value)
+                           sumTotalSalary(handSalary, mealAllowance, socialSecurity,value)
+                         }}/>
           </Form.Item>
 
-          <Form.Item label="请假扣款"  name="timeOff"
+          <Form.Item label="请假扣款" name="timeOff"
                      rules={[{required: true, message: '请输入请假扣款'}]}>
-            <InputNumber min={0} max={1000000}/>
+            <InputNumber min={0} max={1000000}
+                         onChange={(value) => {
+                           setTimeOff(value)
+                           sumHandSalary(baseSalary, value, otherOff,overTimeAllowance)
+                         }}/>
           </Form.Item>
 
-          <Form.Item label="其他扣款"  name="otherOff"
+          <Form.Item label="其他扣款" name="otherOff"
                      rules={[{required: true, message: '请输入其他扣款'}]}>
-            <InputNumber min={0} max={1000000}/>
+            <InputNumber min={0} max={1000000}
+                         onChange={(value) => {
+                           setOtherOff(value)
+                           sumHandSalary(baseSalary, timeOff, value,overTimeAllowance)
+                         }}/>
           </Form.Item>
 
-          <Form.Item label="总工资" name="totalSalary"
-                     rules={[{required: true, message: '请输入总工资'}]}>
-            <InputNumber min={0} max={1000000}/>
+          <Form.Item label="总工资" name="totalSalary">
+            <span className="ant-form-text">{`${totalSalary}\t（基本工资+所有补贴-所有扣款）`}</span>
           </Form.Item>
 
-          <Form.Item label="应入账工资" name="handSalary"
-                     rules={[{required: true, message: '请输入应入账工资'}]}>
-            <InputNumber min={0} max={1000000}/>
+          <Form.Item label="应入账工资:" name="handSalary">
+            {/* {`应入账工资:${handSalary}(基本工资-扣款项+加班补贴)`} */}
+            <span className="ant-form-text">{`${handSalary}\t（基本工资-请假扣款-其他扣款+加班补贴）`}</span>
           </Form.Item>
+
+
 
           <Form.Item label="是否已入账" name="toAccount"
                      rules={[{required: true}]}>
