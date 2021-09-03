@@ -254,10 +254,16 @@ export default {
     }
     else {
       requestType=1
-      list[index].type=type
-      list[index].unit=unit
-      list[index].remaining=remaining
-      list[index].date=date
+
+      for(let i in list[index]) {
+        if (list[index][i] !== req[i]&&req.body[i]!==undefined) {
+          // console.log("list[index][i]!==req.body[i]")
+          // console.log(`list[index][${i}]:${list[index][i]};
+          // req.body[${i}]:${req[i]}`)
+          list[index][i] = req.body[i]
+          list[index].date=date
+        }
+      }
     }
     res.send({
       requestType:requestType,

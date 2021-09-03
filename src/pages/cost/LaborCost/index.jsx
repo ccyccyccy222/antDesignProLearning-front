@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Form, Input, InputNumber, Modal, Select, Table, Radio} from 'antd';
 import useForm from "antd/es/form/hooks/useForm";
 import styles from "@/pages/Material/index.less";
+import {getLaborList, updateLaborList} from "@/services/ant-design-pro/api";
 
 const {Search} = Input;
 const {Option} = Select;
@@ -22,6 +23,9 @@ const laborCost = () => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [laborId, setLaborId] = useState('000021');
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [baseSalary, setBaseSalary] = useState(0);
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -40,6 +44,14 @@ const laborCost = () => {
   const [otherAllowance, setOtherAllowance] = useState(0);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [totalSalary, setTotalSalary] = useState(0);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [data, setData] = useState([])
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks,react-hooks/exhaustive-deps
+  useEffect(async () => {
+    const result = await getLaborList()
+    setData(result)
+  }, [])
 
   // 自动计算总工资
   const sumTotalSalary=(a,b,c,d)=>{
@@ -63,7 +75,13 @@ const laborCost = () => {
   }
 
 
-
+  // 更新列表
+  const updateList=async (values)=>{
+    // 调用service中的方法，修改状态，返回修改后的数组
+    const res=await updateLaborList(values)
+    setData(res.list)
+    return res
+  }
 
   // 处理模态框
   const showModal = () => {
@@ -71,6 +89,29 @@ const laborCost = () => {
   };
 
   const handleOk = () => {
+    let formValue;
+    form.validateFields().then(value => {
+      // eslint-disable-next-line no-console
+      console.log("value :",value)
+      formValue=value
+      updateList(formValue).then(res=>{
+        let content=''
+        // eslint-disable-next-line default-case
+        switch (res.requestType){
+          case 0:
+            //    添加
+            content='添加成功'
+            break
+          case 1:
+            content='修改成功'
+            break
+        }
+        Modal.success({
+          content,
+        })
+      } )
+
+    });
     // 返回执行结果
     setIsModalVisible(false);
   };
@@ -139,6 +180,10 @@ const laborCost = () => {
       title: '基本工资',
       dataIndex: 'baseSalary',
       key: 'baseSalary',
+      sorter: (a, b) => {
+        return a.baseSalary-b.baseSalary
+      },
+      sortDirections: ['descend','ascend'],
     },
     {
       title: '补贴项',
@@ -184,16 +229,35 @@ const laborCost = () => {
       title: '总工资',
       dataIndex: 'totalSalary',
       key: 'totalSalary',
+      sorter: (a, b) => {
+        return a.totalSalary-b.totalSalary
+      },
+      sortDirections: ['descend','ascend'],
     },
     {
       title: '应到账工资',
       dataIndex: 'handSalary',
       key: 'handSalary',
+      sorter: (a, b) => {
+        return a.handSalary-b.handSalary
+      },
+      sortDirections: ['descend','ascend'],
     },
     {
       title: '是否入账',
       dataIndex: 'toAccount',
       key: 'toAccount',
+      filters: [
+        {
+          text: '是',
+          value: true
+        },
+        {
+          text: '否',
+          value: false
+        }
+      ],
+      onFilter: (value, record) => record.toAccount===value,
       render: (_, record) => {
         return (record.toAccount === true ? '是' : '否')
       },
@@ -202,6 +266,13 @@ const laborCost = () => {
       title: '更新时间',
       dataIndex: 'updateTime',
       key: 'updateTime',
+      sorter: (a, b) => {
+        const aDate = new Date(a.updateTime)
+        const bDate = new Date(b.updateTime)
+        if (aDate > bDate) return 1
+        return -1
+      },
+      sortDirections: ['descend','ascend'],
     },
     {
       // title: 'Action',
@@ -226,32 +297,6 @@ const laborCost = () => {
     },
   ];
 
-  const data = [];
-  for (let i = 1; i < 20; i += 1) {
-    let id
-    if (i < 10) {
-      id = `00000${i}`
-    } else id = `0000${i}`
-    const name = `ccy${i}`
-    data.push({
-      key: i,
-      laborId: id,
-      name,
-      position: '服务员',
-      baseSalary: 3000,
-      overTimeAllowance: 0,
-      mealAllowance: 800,
-      otherAllowance: 0,
-      socialSecurity: 150,
-      timeOff: 0,
-      otherOff: 0,
-      totalSalary: 3950,
-      handSalary: 3000,
-      toAccount: false,
-      updateTime: '2021-8-24 23:12:01'
-    });
-  }
-
   return (
     <div>
       <div className={styles.tableHead}>
@@ -261,10 +306,19 @@ const laborCost = () => {
                 style={{width: 300, marginRight: 15}}/>
         <Button type="primary" onClick={() => {
           const record = {
-            name: '',
-            type: '',
-            unit: '',
-            remaining: 0
+            laborId:`0000${data.length+1}`,
+            name:'',
+            position:'',
+            baseSalary:0,
+            overTimeAllowance:0,
+            mealAllowance:0,
+            socialSecurity:0,
+            otherAllowance:0,
+            timeOff:0,
+            otherOff:0,
+            totalSalary:0,
+            handSalary:0,
+            toAccount:false,
           }
           form.setFieldsValue(record)
           showModal()
@@ -291,7 +345,7 @@ const laborCost = () => {
             name="laborId"
             label="员工编号"
           >
-            <span className="ant-form-text">{`${totalSalary}\t（基本工资+所有补贴-所有扣款）`}</span>
+            <span className="ant-form-text">{laborId}</span>
           </Form.Item>
           <Form.Item
             name="name"
@@ -307,7 +361,7 @@ const laborCost = () => {
           </Form.Item>
 
           <Form.Item
-            name="type"
+            name="position"
             label="职位"
             hasFeedback
             rules={[{required: true, message: '请选择员工职位'}]}
@@ -351,7 +405,7 @@ const laborCost = () => {
                          }}/>
           </Form.Item>
 
-          <Form.Item label="社保" name="baseSalary" rules={[{required: true, message: '请输入社保'}]}>
+          <Form.Item label="社保" name="socialSecurity" rules={[{required: true, message: '请输入社保'}]}>
             <InputNumber min={0} max={1000000}
                          onChange={(value) => {
                            setSocialSecurity(value)
@@ -359,7 +413,7 @@ const laborCost = () => {
                          }}/>
           </Form.Item>
 
-          <Form.Item label="其他补贴" name="socialSecurity"
+          <Form.Item label="其他补贴" name="otherAllowance"
                      rules={[{required: true, message: '请输入其他补贴'}]}>
             <InputNumber min={0} max={1000000}
                          onChange={(value) => {

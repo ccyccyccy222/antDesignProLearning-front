@@ -124,3 +124,25 @@ export async function updateTakeoutList(body,options){
     ...(options || {}),
   })
 }
+
+//请求人事列表
+export async function getLaborList(options) {
+  return request('/api/laborList', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+//修改人事列表
+export async function updateLaborList(body,options){
+  console.log(body)
+  return request('/api/updateLaborList',{
+    //修改一般使用put
+    method:'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
