@@ -146,3 +146,25 @@ export async function updateLaborList(body,options){
     ...(options || {}),
   })
 }
+
+//请求水电煤气费列表
+export async function getUtilitiesList(options) {
+  return request('/api/utilitiesList', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+//修改水电煤气费列表
+export async function updateUtilitiesList(body,options){
+  console.log(body)
+  return request('/api/updateUtilitiesList',{
+    //修改一般使用put
+    method:'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
