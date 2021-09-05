@@ -1,7 +1,7 @@
 let list = [
   {
     key:1,
-    date: '2021-8-24 23:12:01',
+    date: '2021-08-24 23:12:01',
     waterUnit: 5,
     waterVolume: 100,
     waterAmount: 500,
@@ -15,7 +15,7 @@ let list = [
   },
   {
     key:2,
-    date: '2021-7-24 23:12:01',
+    date: '2021-07-24 23:12:01',
     waterUnit: 5,
     waterVolume: 100,
     waterAmount: 500,
@@ -63,6 +63,17 @@ export default {
     }
     res.send({
       requestType:requestType,
+      list:list
+    })
+  },
+  'POST /api/addUtilities':(req,res)=>{
+    const date=new Date().Format("yyyy-MM-dd hh:mm:ss")
+    let item=req.body
+    item.date=date
+    item.key=list.length+1
+    list.push(item)
+    res.send({
+      requestType:0,
       list:list
     })
   }

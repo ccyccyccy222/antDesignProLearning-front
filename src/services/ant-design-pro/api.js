@@ -168,3 +168,17 @@ export async function updateUtilitiesList(body,options){
     ...(options || {}),
   })
 }
+
+//添加新的水电煤气项列表
+export async function addUtilities(body,options){
+  console.log(body)
+  return request('/api/addUtilities',{
+    //修改一般使用put
+    method:'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}

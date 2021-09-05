@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Form, InputNumber, Modal, Table} from 'antd';
+import {Button, DatePicker, Form, InputNumber, Modal, Table} from 'antd';
 import useForm from "antd/es/form/hooks/useForm";
 import styles from "@/pages/Material/index.less";
-import {getUtilitiesList, updateUtilitiesList} from "@/services/ant-design-pro/api";
+import {addUtilities, getUtilitiesList, updateUtilitiesList} from "@/services/ant-design-pro/api";
 
 
 const formItemLayout = {
@@ -33,18 +33,8 @@ const utilities = () => {
   // const [waterVolume, setWaterVolume] = useState(0);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [waterAmount, setWaterAmount] = useState(0)
-  //
-  // // eslint-disable-next-line react-hooks/rules-of-hooks
-  // const [electricUnit, setElectricUnit] = useState(0)
-  // // eslint-disable-next-line react-hooks/rules-of-hooks
-  // const [electricVolume, setElectricVolume] = useState(0);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [electricAmount, setElectricAmount] = useState(0)
-  //
-  // // eslint-disable-next-line react-hooks/rules-of-hooks
-  // const [gasUnit, setGasUnit] = useState(0)
-  // // eslint-disable-next-line react-hooks/rules-of-hooks
-  // const [gasVolume, setGasVolume] = useState(0);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [gasAmount, setGasAmount] = useState(0)
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -52,6 +42,14 @@ const utilities = () => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [item, setItem] = useState({})
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [ifFilter, setIfFilter] = useState(false);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [filterData, setFilterData] = useState(data);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [ifAdd, setIfAdd] = useState(false);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks,react-hooks/exhaustive-deps
   useEffect(async () => {
@@ -61,8 +59,9 @@ const utilities = () => {
 
   // 更新列表
   const updateList = async (values) => {
+    const res = ifAdd?await addUtilities(values):await updateUtilitiesList(values)
     // 调用service中的方法，修改状态，返回修改后的数组
-    const res = await updateUtilitiesList(values)
+    // const res = await updateUtilitiesList(values)
     setData(res.list)
     return res
   }
@@ -76,6 +75,22 @@ const utilities = () => {
   // 自动计算总费用
   const sumTotal=(water,electric,gas)=>{
     return water+electric+gas
+  }
+
+  // 日期选择
+  const onChange=(date,dateString)=> {
+    // eslint-disable-next-line no-console
+    console.log(date)
+    // eslint-disable-next-line no-console
+    console.log(dateString)
+    setIfFilter(true)
+    const arr=[]
+    for(let i=0;i<data.length;i+=1){
+      if(data[i].date.indexOf(dateString)>=0){
+        arr.push(data[i]);
+      }
+    }
+    setFilterData(arr)
   }
 
 
@@ -210,10 +225,36 @@ const utilities = () => {
   return (
     <div>
       <div className={styles.tableHead}>
+        <DatePicker onChange={onChange} picker="month"  style={{marginRight: 15}}/>
+        <Button type="primary" onClick={() => {
+          setIfAdd(true)
+          const record = {
+            key:(data.length+1),
+            date: '',
+            waterUnit: 0,
+            waterVolume: 0,
+            waterAmount: 0,
+            electricUnit: 0,
+            electricVolume: 0,
+            electricAmount: 0,
+            gasUnit: 0,
+            gasVolume: 0,
+            gasAmount: 0,
+            totalAmount: 0
+          }
+          setItem(record)
+          setWaterAmount(record.waterAmount)
+          setGasAmount(record.gasAmount)
+          setElectricAmount(record.electricAmount)
+          setSelectedDate(record.date)
+          setTotalAmount(record.totalAmount)
+          form.setFieldsValue(record)
+          showModal()
+        }}>添加</Button>
       </div>
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={ifFilter?filterData:data}
         bordered
         size="middle"
       />,
@@ -229,11 +270,11 @@ const utilities = () => {
           // onFinish={handleOk}
         >
 
-          <Form.Item
-            // name="label4"
-          >
-            <span className="ant-form-text">{`上次更新时间:  ${selectedDate}`}</span>
-          </Form.Item>
+          {/* <Form.Item */}
+          {/*  // name="label4" */}
+          {/* > */}
+          {/*  <span className="ant-form-text">{`上次更新时间:  ${selectedDate}`}</span> */}
+          {/* </Form.Item> */}
 
           <Form.Item
             name="date"
