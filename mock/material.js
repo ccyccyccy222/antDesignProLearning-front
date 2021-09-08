@@ -267,7 +267,7 @@ export default {
     }
     res.send({
       requestType:requestType,
-      list:list
+      // list:list
     })
   }
 }

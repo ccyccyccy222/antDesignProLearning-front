@@ -1,6 +1,6 @@
 import {Button, Table, Input, Modal, Form, Select, InputNumber} from 'antd';
 import styles from './index.less';
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {getMaterialList, updateMaterialList} from "@/services/ant-design-pro/api";
 import useForm from "antd/es/form/hooks/useForm";
 
@@ -38,6 +38,8 @@ const material = () => {
   const [ifFilter, setIfFilter] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [filterData, setFilterData] = useState(data);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [name, setName] = useState('');
 
 
   // eslint-disable-next-line react-hooks/rules-of-hooks,react-hooks/exhaustive-deps
@@ -50,7 +52,8 @@ const material = () => {
   const updateList=async (values)=>{
     // 调用service中的方法，修改状态，返回修改后的数组
     const res=await updateMaterialList(values)
-    setData(res.list)
+    const result = await getMaterialList()
+    setData(result)
     return res
   }
 
@@ -159,6 +162,7 @@ const material = () => {
       {
         // eslint-disable-next-line no-console
         console.log(record)
+        setName(record.name)
         form.setFieldsValue(record)
         showModal()
       }}>
@@ -203,15 +207,8 @@ const material = () => {
         >
           <Form.Item
             name="name"
-            label="名称"
-            rules={[
-              {
-                required: true,
-                message: '请输入材料名',
-              },
-            ]}
           >
-            <Input placeholder="请输入材料名"/>
+            <span className="ant-form-text">{name}</span>
           </Form.Item>
 
           <Form.Item
