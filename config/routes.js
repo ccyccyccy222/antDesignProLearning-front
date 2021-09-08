@@ -41,6 +41,10 @@ export default [
     ]
   },
   {
+    path: '/',
+    redirect: '/food'
+  },
+  {
     path: '/login',
     layout: false,
     component: './Login',
@@ -49,10 +53,6 @@ export default [
         component: './404',
       },
     ],
-  },
-  {
-    path: '/',
-    redirect: '/food'
   },
   {
     component: './404',

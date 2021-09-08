@@ -50,15 +50,17 @@ const Login = () => {
         });
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
-        /** 此方法会跳转到 redirect 参数所在的位置 */
 
+        /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) return;
         const { query } = history.location;
         const { redirect } = query;
-        history.push(redirect || '/');
+        // eslint-disable-next-line no-console
+        console.log("redirect:",redirect)
+        history.push(redirect || '/food');
         return;
-      } // 如果失败去设置用户错误信息
-
+      }
+      // 如果失败去设置用户错误信息
       setUserLoginState(msg);
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
@@ -139,10 +141,10 @@ const Login = () => {
                     size: 'large',
                     prefix: <UserOutlined className={styles.prefixIcon} />,
                   }}
-                  placeholder={intl.formatMessage({
-                    id: 'pages.login.username.placeholder',
-                    defaultMessage: '用户名: admin or user',
-                  })}
+                  // placeholder={intl.formatMessage({
+                  //   // id: 'pages.login.username.placeholder',
+                  //   // defaultMessage: '用户名: admin or user',
+                  // })}
                   rules={[
                     {
                       required: true,
@@ -161,10 +163,10 @@ const Login = () => {
                     size: 'large',
                     prefix: <LockOutlined className={styles.prefixIcon} />,
                   }}
-                  placeholder={intl.formatMessage({
-                    id: 'pages.login.password.placeholder',
-                    defaultMessage: '密码: 123',
-                  })}
+                  // placeholder={intl.formatMessage({
+                  //   // id: 'pages.login.password.placeholder',
+                  //   // defaultMessage: '密码: 123',
+                  // })}
                   rules={[
                     {
                       required: true,
