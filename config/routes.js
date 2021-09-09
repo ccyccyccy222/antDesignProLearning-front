@@ -32,11 +32,6 @@ export default [
         path: '/cost/utilities',
         component: './cost/Utilities'
       },
-      {
-        name: 'materialCost',
-        path: '/cost/materialCost',
-        component: './cost/MaterialCost'
-      },
 
     ]
   },

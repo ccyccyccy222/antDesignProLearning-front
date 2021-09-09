@@ -195,7 +195,7 @@ const material = () => {
         dataSource={ifFilter?filterData:data}
       />
       {/* 模态框 */}
-      <Modal title="修改人工费" visible={isModalVisible}
+      <Modal title="修改" visible={isModalVisible}
              onOk={handleOk} onCancel={handleCancel}
              width={500}
              bodyStyle={{padding: 20}}>

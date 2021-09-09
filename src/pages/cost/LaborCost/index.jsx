@@ -24,6 +24,10 @@ const laborCost = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isModalVisible, setIsModalVisible] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [isUpdate, setIsUpdate] = useState(true);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [currentID, setCurrentID] = useState('');
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [data, setData] = useState([])
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [ifFilter, setIfFilter] = useState(false);
@@ -321,6 +325,8 @@ const laborCost = () => {
         setTimeOff(record.timeOff)
         setOtherOff(record.otherOff)
         setHandSalary(record.handSalary)
+        setIsUpdate(true)
+        setCurrentID(record.laborId)
         form.setFieldsValue(record)
         showModal()
       }}>
@@ -336,6 +342,7 @@ const laborCost = () => {
                 onChange={inputChange}
                 style={{width: 300, marginRight: 15}}/>
         <Button type="primary" onClick={() => {
+          setIsUpdate(false)
           const record = {
             laborId:`0000${data.length+1}`,
             name:'',
@@ -361,7 +368,7 @@ const laborCost = () => {
         bordered
         size="middle"
       />,
-      <Modal title="修改" visible={isModalVisible}
+      <Modal title={isUpdate?"修改":"添加"} visible={isModalVisible}
              onOk={handleOk} onCancel={handleCancel}
              width={500}
              bodyStyle={{padding: 20}}>
@@ -376,7 +383,7 @@ const laborCost = () => {
             name="laborId"
             label="员工编号"
           >
-            <span className="ant-form-text">{`0000${data.length+1}`}</span>
+            <span className="ant-form-text">{isUpdate?currentID:`0000${data.length+1}`}</span>
           </Form.Item>
           <Form.Item
             name="name"
