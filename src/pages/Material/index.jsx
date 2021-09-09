@@ -39,7 +39,7 @@ const material = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [filterData, setFilterData] = useState(data);
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [name, setName] = useState('');
+  const [isUpdate, setIsUpdate] = useState(true);
 
 
   // eslint-disable-next-line react-hooks/rules-of-hooks,react-hooks/exhaustive-deps
@@ -162,7 +162,7 @@ const material = () => {
       {
         // eslint-disable-next-line no-console
         console.log(record)
-        setName(record.name)
+        setIsUpdate(true)
         form.setFieldsValue(record)
         showModal()
       }}>
@@ -180,6 +180,7 @@ const material = () => {
                 style={{width: 300, marginRight: 15}}/>
         <Button type="primary" onClick={() =>
         {
+          setIsUpdate(false)
           const record={
             name:'',
             type:'',
@@ -195,7 +196,7 @@ const material = () => {
         dataSource={ifFilter?filterData:data}
       />
       {/* 模态框 */}
-      <Modal title="修改" visible={isModalVisible}
+      <Modal title={isUpdate?"修改":"添加"} visible={isModalVisible}
              onOk={handleOk} onCancel={handleCancel}
              width={500}
              bodyStyle={{padding: 20}}>
@@ -207,8 +208,15 @@ const material = () => {
         >
           <Form.Item
             name="name"
+            label="材料名"
+            rules={[
+              {
+                required: true,
+                message: '请输入材料名',
+              },
+            ]}
           >
-            <span className="ant-form-text">{name}</span>
+            <Input placeholder="请输入材料名"/>
           </Form.Item>
 
           <Form.Item
