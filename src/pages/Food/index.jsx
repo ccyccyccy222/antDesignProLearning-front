@@ -5,27 +5,6 @@ import {useEffect,useState} from "react";
 
 const { Meta } = Card;
 
-const pushFoodCardArray=(foodArray)=>{
-  const foodCardArray=[]
-
-  for(let i=0;i<foodArray.length;i+=1){
-    // eslint-disable-next-line no-console
-    // console.log(i)
-    foodCardArray.push( <Card
-      style={{width:300,borderRadius:15,overflow:"hidden",margin:20}}
-      cover={<img
-        alt="example"
-        src={foodArray[i].imgUrl}
-      />}
-      key={i}
-    >
-      <Meta title={foodArray[i].name}  avatar={<EditOutlined key="edit" />}/>
-    </Card>)
-  }
-  return foodCardArray
-}
-
-
 
 const food=()=>{
 
@@ -34,9 +13,43 @@ const food=()=>{
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isModalVisible, setIsModalVisible] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [loading, setLoading] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [imageUrl , setImageUrl ] = useState(false);
+
+  const showUpdateModal = () => {
+    setIsUpdateModalVisible(true);
+  };
+
+  const handleUpdateModalOk = () => {
+    setIsUpdateModalVisible(false);
+  };
+
+  const handleUpdateModalCancel = () => {
+    setIsUpdateModalVisible(false);
+  };
+
+  const pushFoodCardArray=(foodArray)=>{
+    const array=[]
+
+    for(let i=0;i<foodArray.length;i+=1){
+      // eslint-disable-next-line no-console
+      // console.log(i)
+      array.push( <Card
+        style={{width:300,borderRadius:15,overflow:"hidden",margin:20}}
+        cover={<img
+          alt="example"
+          src={foodArray[i].imgUrl}
+        />}
+        key={i}
+      >
+        <Meta title={foodArray[i].name}  avatar={<EditOutlined key="edit" />} onClick={showUpdateModal}/>
+      </Card>)
+    }
+    return array
+  }
 
 
   // 第2个参数需要给上，就可以让它只在第一次渲染的时候触发，即挂载前触发
@@ -48,6 +61,9 @@ const food=()=>{
       const array=pushFoodCardArray(foodArray)
       setFoodCardArray(array)
   },[])
+
+
+
 
   // 处理模态框
 
@@ -62,6 +78,8 @@ const food=()=>{
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+
 
 
 
@@ -159,7 +177,15 @@ const food=()=>{
         </Upload>
 
       </Modal>
-
+      <Modal title="修改菜品" visible={isUpdateModalVisible}
+             onOk={handleUpdateModalOk} onCancel={handleUpdateModalCancel}
+             width={450}
+             bodyStyle={{padding:40}}>
+        <Input placeholder="请输入菜品名称"
+               maxLength={5}
+               size="middle"
+               width={200}/>
+      </Modal>
     </>
 
   )

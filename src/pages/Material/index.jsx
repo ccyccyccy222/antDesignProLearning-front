@@ -40,6 +40,9 @@ const material = () => {
   const [filterData, setFilterData] = useState(data);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isUpdate, setIsUpdate] = useState(true);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [currentName, setCurrentName] = useState('');
+
 
 
   // eslint-disable-next-line react-hooks/rules-of-hooks,react-hooks/exhaustive-deps
@@ -163,6 +166,7 @@ const material = () => {
         // eslint-disable-next-line no-console
         console.log(record)
         setIsUpdate(true)
+        setCurrentName(record.name)
         form.setFieldsValue(record)
         showModal()
       }}>
@@ -216,7 +220,11 @@ const material = () => {
               },
             ]}
           >
-            <Input placeholder="请输入材料名"/>
+            {isUpdate?
+              <span className="ant-form-text">{currentName}</span>:
+              <Input placeholder="请输入材料名"/>
+            }
+
           </Form.Item>
 
           <Form.Item

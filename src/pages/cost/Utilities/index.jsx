@@ -2,7 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {Button, DatePicker, Form, InputNumber, Modal, Table} from 'antd';
 import useForm from "antd/es/form/hooks/useForm";
 import styles from "@/pages/Material/index.less";
-import {addUtilities, getUtilitiesList, updateUtilitiesList} from "@/services/ant-design-pro/api";
+import {
+  getUtilitiesList,
+  updateUtilitiesList
+} from "@/services/ant-design-pro/api";
 
 
 const formItemLayout = {
@@ -26,6 +29,8 @@ const utilities = () => {
   const [data, setData] = useState([])
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [selectedDate, setSelectedDate] = useState('')
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [currentID, setCurrentID] = useState(0)
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   // const [waterUnit, setWaterUnit] = useState(0)
@@ -59,10 +64,13 @@ const utilities = () => {
 
   // 更新列表
   const updateList = async (values) => {
-    const res = ifAdd?await addUtilities(values):await updateUtilitiesList(values)
+    // const res = ifAdd?await addUtilities(values):await updateUtilitiesList(values)
     // 调用service中的方法，修改状态，返回修改后的数组
     // const res = await updateUtilitiesList(values)
-    setData(res.list)
+    const res=await updateUtilitiesList(values)
+    const result = await getUtilitiesList()
+    setData(result)
+    // setData(res.list)
     return res
   }
 
@@ -105,7 +113,7 @@ const utilities = () => {
       // eslint-disable-next-line no-console
       console.log("value :", value)
       formValue = value
-      updateList(formValue).then(res => {
+      updateList({currentID,...formValue}).then(res => {
         let content = ''
         // eslint-disable-next-line default-case
         switch (res.requestType) {
@@ -209,12 +217,14 @@ const utilities = () => {
       render: (_, record) => <a onClick={() => {
         // eslint-disable-next-line no-console
         console.log(record)
+        setIfAdd(false)
         setItem(record)
         setWaterAmount(record.waterAmount)
         setGasAmount(record.gasAmount)
         setElectricAmount(record.electricAmount)
         setSelectedDate(record.date)
         setTotalAmount(record.totalAmount)
+        setCurrentID(record.key)
         form.setFieldsValue(record)
         showModal()
       }}>
@@ -227,9 +237,10 @@ const utilities = () => {
       <div className={styles.tableHead}>
         <DatePicker onChange={onChange} picker="month"  style={{marginRight: 15}}/>
         <Button type="primary" onClick={() => {
-          setIfAdd(true)
+          // setIfAdd(true)
+          setCurrentID(data.length+1)
           const record = {
-            key:(data.length+1),
+            key:currentID,
             date: '',
             waterUnit: 0,
             waterVolume: 0,
@@ -242,6 +253,7 @@ const utilities = () => {
             gasAmount: 0,
             totalAmount: 0
           }
+          setIfAdd(true)
           setItem(record)
           setWaterAmount(record.waterAmount)
           setGasAmount(record.gasAmount)
@@ -258,7 +270,7 @@ const utilities = () => {
         bordered
         size="middle"
       />,
-      <Modal title="修改" visible={isModalVisible}
+      <Modal title={ifAdd?"添加":"修改"} visible={isModalVisible}
              onOk={handleOk} onCancel={handleCancel}
              width={400}
              bodyStyle={{display:'flex',justifyContent:"center"}}>

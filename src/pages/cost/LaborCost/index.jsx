@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Form, Input, InputNumber, Modal, Select, Table, Radio} from 'antd';
 import useForm from "antd/es/form/hooks/useForm";
 import styles from "@/pages/Material/index.less";
-import {getLaborList, updateLaborList} from "@/services/ant-design-pro/api";
+import {getLaborList, getMaterialList, updateLaborList} from "@/services/ant-design-pro/api";
 
 const {Search} = Input;
 const {Option} = Select;
@@ -88,7 +88,8 @@ const laborCost = () => {
   const updateList=async (values)=>{
     // 调用service中的方法，修改状态，返回修改后的数组
     const res=await updateLaborList(values)
-    setData(res.list)
+    const result = await getLaborList()
+    setData(result)
     return res
   }
 
