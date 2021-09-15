@@ -33,6 +33,62 @@ const filterData=(data,type)=>{
   return result
 }
 
+// 匹配菜品
+const pickFood=(num)=>{
+  let str;
+  switch (num){
+    case 1:
+      str="番茄牛尾汤红酒牛肉面 x1";
+      break;
+    case 2:
+      str="香辣火锅汤雪花肥牛面 x1";
+      break;
+    case 3:
+      str="番茄香草汤半筋半肉面 x1";
+      break;
+    case 4:
+      str="经典酸辣汤猪小排面 x1";
+      break;
+    case 5:
+      str="大师素油拌面 x1";
+      break;
+    case 6:
+      str="西北酱小排拌面 x1";
+      break;
+    case 7:
+      str="老火油红酒牛肉拌面 x1";
+      break;
+    default:
+      str="未知菜品";
+      break;
+  }
+  return str;
+}
+
+// 处理订单
+const disposeOrder=(list)=>{
+  list.forEach(element=>{
+    let str=element.order
+    const strArray=str.split(",")
+    str=''
+    strArray.forEach((item)=>{
+      // eslint-disable-next-line no-console
+      // console.log(`${index}: ${item};`)
+      // eslint-disable-next-line no-console
+      // console.log(pickFood(Number(item)))
+      str+=`${pickFood(Number(item))}\n`
+    })
+    // eslint-disable-next-line no-console
+    // console.log(str)
+    // eslint-disable-next-line no-param-reassign
+    element.order=str
+    // eslint-disable-next-line no-console
+    // console.log("\n")
+  })
+}
+
+
+
 
 const takeout = () => {
 
@@ -42,8 +98,12 @@ const takeout = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks,react-hooks/exhaustive-deps
   useEffect(async () => {
     const result = await getTakeoutList()
+    // 处理订单
+    disposeOrder(result)
     setData(result)
   }, [])
+
+
 
   const changeState= async (key,state)=>{
     // eslint-disable-next-line no-console
@@ -53,6 +113,8 @@ const takeout = () => {
     const {code}=await updateTakeoutList({key, state})
     if(code===0){
       const result = await getTakeoutList()
+      // 处理订单
+      disposeOrder(result)
       setData(result)
       let content=''
       switch (state){
@@ -193,7 +255,10 @@ const takeout = () => {
           {content}</Tag>)
       },
     },
-    {title: '评价', dataIndex: 'comment', key: 'comment'},
+    {title: '评价', dataIndex: 'comment', key: 'comment',
+    render:(_,record)=>{
+      return(<div>{record.comment===''?"无":record.comment}</div>)
+    }},
   ];
 
   const columnError = [
@@ -203,7 +268,10 @@ const takeout = () => {
     },
     {title: '平台', dataIndex: 'platform', key: 'platform'},
     {title: '订单', dataIndex: 'order', key: 'order'},
-    {title: '取消订单原因', dataIndex: 'refundReason', key: 'refundReason'},
+    {title: '取消订单原因', dataIndex: 'refundReason', key: 'refundReason',
+      render:(_,record)=>{
+        return(<div>{record.refundReason===''?"无":record.refundReason}</div>)
+      }},
     {
       title: '退款处理', dataIndex: 'state', key: 'state',
       //  0表示待接单，1表示待送出，2表示已送出，3表示用户已收到，4表示用户申请退款且未处理，5表示用户申请退款且已退款,，6表示用户申请退款但不退款
