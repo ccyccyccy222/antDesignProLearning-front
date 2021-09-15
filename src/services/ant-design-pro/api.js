@@ -82,6 +82,18 @@ export async function getFoodList(options) {
   });
 }
 
+// 修改food菜单
+export async function updateFoodList(body,options) {
+  return request('/api/updateFoodList', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 //获取原材料菜单
 export async function getMaterialList(options){
   return request('/api/materialList',{
