@@ -1,12 +1,16 @@
-import {Card, Input,Modal,Upload, message} from 'antd';
+import {Form, Card, Input, Modal, Upload, message, InputNumber} from 'antd';
 import {EditOutlined,LoadingOutlined, PlusOutlined} from "@ant-design/icons";
 import {getFoodList} from "@/services/ant-design-pro/api";
 import {useEffect,useState} from "react";
+import useForm from "antd/es/form/hooks/useForm";
 
 const { Meta } = Card;
 
 
 const food=()=>{
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [form] = useForm();
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [foodCardArray,setFoodCardArray]=useState([])
@@ -45,7 +49,9 @@ const food=()=>{
         />}
         key={i}
       >
-        <Meta title={foodArray[i].name}  avatar={<EditOutlined key="edit" />} onClick={showUpdateModal}/>
+        <Meta title={foodArray[i].name}  avatar={<EditOutlined key="edit" />}
+              description={`价格：${foodArray[i].price}元`}
+              onClick={showUpdateModal}/>
       </Card>)
     }
     return array
@@ -181,10 +187,32 @@ const food=()=>{
              onOk={handleUpdateModalOk} onCancel={handleUpdateModalCancel}
              width={450}
              bodyStyle={{padding:40}}>
-        <Input placeholder="请输入菜品名称"
-               maxLength={5}
-               size="middle"
-               width={200}/>
+        <Form
+          form={form}
+          name="basic"
+          labelCol={{ span: 5 }}
+          wrapperCol={{ span: 15 }}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="菜品名"
+            name="name"
+            rules={[{ required: true, message: '请输入菜品名！!' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="价格"
+            name="price"
+            rules={[{ required: true, message: '请输入价格！!' }]}
+          >
+            <Form.Item name="input-number" noStyle>
+              <InputNumber min={0} max={1000} />
+            </Form.Item>
+            <span className="ant-form-text"> 元</span>
+          </Form.Item>
+        </Form>
       </Modal>
     </>
 

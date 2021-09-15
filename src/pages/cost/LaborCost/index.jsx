@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Form, Input, InputNumber, Modal, Select, Table, Radio} from 'antd';
 import useForm from "antd/es/form/hooks/useForm";
 import styles from "@/pages/Material/index.less";
-import {getLaborList, getMaterialList, updateLaborList} from "@/services/ant-design-pro/api";
+import {getLaborList, updateLaborList} from "@/services/ant-design-pro/api";
 
 const {Search} = Input;
 const {Option} = Select;
