@@ -1,10 +1,19 @@
 import React, {useEffect,useState} from "react";
-import {Form, Card, Input, Modal,  InputNumber} from 'antd';
-import {EditOutlined} from "@ant-design/icons";
+import {Form, Card, Input, Modal, InputNumber, Upload} from 'antd';
+import {EditOutlined,LoadingOutlined, PlusOutlined} from "@ant-design/icons";
 import {getFoodList, updateFoodList} from "@/services/ant-design-pro/api";
 import useForm from "antd/es/form/hooks/useForm";
+// eslint-disable-next-line import/no-absolute-path
+import img from "C:/Users/ccy/Pictures/数据库课设图片/foodMenu/image/大师素油拌面.png";
+
 
 const { Meta } = Card;
+
+// function getBase64(img, callback) {
+//   const reader = new FileReader();
+//   reader.addEventListener('load', () => callback(reader.result));
+//   reader.readAsDataURL(img);
+// }
 
 
 const food=()=>{
@@ -20,7 +29,10 @@ const food=()=>{
   const [currentID , setCurrentID] = useState('');
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [ifAdd , setIfAdd] = useState(false);
-
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [loading , setLoading] = useState(false);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [imageUrl , setImageUrl] = useState(false);
 
   const pushFoodCardArray=(foodList)=>{
     const array=[]
@@ -30,7 +42,8 @@ const food=()=>{
         style={{width:300,borderRadius:15,overflow:"hidden",margin:20}}
         cover={<img
           alt="example"
-          src={foodList[i].imgUrl}
+          // src={foodList[i].imgUrl}
+          src={img}
         />}
         key={i}
       >
@@ -102,6 +115,13 @@ const food=()=>{
     setIsModalVisible(false);
   };
 
+  const uploadButton = (
+    <div>
+      {loading ? <LoadingOutlined /> : <PlusOutlined />}
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
+
   return (
     <>
       <div style={{display:"flex",flexWrap:"wrap"}}>
@@ -114,6 +134,9 @@ const food=()=>{
           onClick={()=>{
             setIfAdd(true)
             setIsModalVisible(true);
+            const len=foodCardArray.length+1;
+            const id=`00${len}`;
+            setCurrentID(id);
             form.setFieldsValue({name:'',price:0})
           }}
         >
@@ -151,6 +174,20 @@ const food=()=>{
             </Form.Item>
             <span className="ant-form-text"> 元</span>
           </Form.Item>
+
+          {/* <Form.Item */}
+          {/* > */}
+            {/* <Upload */}
+            {/*  name="picture" */}
+            {/*  listType="picture-card" */}
+            {/*  className="avatar-uploader" */}
+            {/*  showUploadList={false} */}
+            {/*  action="https://www.mocky.io/v2/5cc8019d300000980a055e76" */}
+            {/*  onChange={this.handleChange} */}
+            {/* > */}
+            {/*  {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton} */}
+            {/* </Upload> */}
+          {/* </Form.Item> */}
         </Form>
       </Modal>
     </>
