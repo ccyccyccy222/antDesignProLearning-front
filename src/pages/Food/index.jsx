@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {Form, Card, Input, Modal, InputNumber, Upload} from 'antd';
+import {Form, Card, Input, Modal, InputNumber, Upload,message} from 'antd';
 import {EditOutlined, LoadingOutlined, PlusOutlined} from "@ant-design/icons";
 import {getFoodList, updateFoodList} from "@/services/ant-design-pro/api";
 import useForm from "antd/es/form/hooks/useForm";
-// eslint-disable-next-line import/no-absolute-path
-// import img from "C:/Users/ccy/Pictures/数据库课设图片/foodMenu/image/大师素油拌面.png";
 
 
 const {Meta} = Card;
@@ -12,6 +10,9 @@ const {Meta} = Card;
 function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
+  // readAsDataURL 方法会读取指定的 Blob 或 File 对象。
+  // 读取操作完成的时候，readyState 会变成已完成DONE，并触发 loadend (en-US) 事件
+  // 即执行callback回调
   reader.readAsDataURL(img);
 }
 
@@ -44,7 +45,7 @@ const food = () => {
           alt="example"
           src={foodList[i].imgUrl}
           // src={img}
-          // src={"C:/Users/ccy/Pictures/数据库课设图片/foodMenu/image/大师素油拌面.png"}
+          // src={"http://localhost:8087/大师素油拌面.png"}
         />}
         key={i}
       >
@@ -90,8 +91,12 @@ const food = () => {
   // 处理模态框
 
   const handleOk = (type) => {
+    if(!imageUrl) {
+      message.error("请上传图片！");
+      return;
+    }
     form.validateFields().then(value => {
-      updateList({type, currentID, ...value}).then(res => {
+      updateList({type, currentID, imageUrl, ...value}).then(res => {
         let content = ''
         // eslint-disable-next-line default-case
         switch (res.requestType) {
@@ -113,6 +118,7 @@ const food = () => {
   };
 
   const handleCancel = () => {
+    setImageUrl(false);
     setIsModalVisible(false);
   };
 
@@ -129,14 +135,30 @@ const food = () => {
       return;
     }
     if (info.file.status === 'done') {
+      // eslint-disable-next-line no-console
+      console.log(info.file)
       // Get this url from response in real world.
       getBase64(info.file.originFileObj, getImageUrl => {
-          setLoading(true)
+          setLoading(false)
           setImageUrl(getImageUrl)
+          // eslint-disable-next-line no-console
+          // console.log(getImageUrl)
         }
       );
     }
   };
+
+  function beforeUpload(file) {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('You can only upload JPG/PNG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Image must smaller than 2MB!');
+    }
+    return isJpgOrPng && isLt2M;
+  }
 
   return (
     <>
@@ -191,8 +213,7 @@ const food = () => {
             <span className="ant-form-text"> 元</span>
           </Form.Item>
 
-          <Form.Item
-          >
+          <Form.Item>
             <Upload
               name="picture"
               listType="picture-card"
@@ -200,6 +221,7 @@ const food = () => {
               showUploadList={false}
               action="/api/upload"
               onChange={handleChange}
+              beforeUpload={beforeUpload}
             >
               {imageUrl ? <img src={imageUrl} alt="avatar" style={{width: '100%'}}/> : uploadButton}
             </Upload>

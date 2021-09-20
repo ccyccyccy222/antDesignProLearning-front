@@ -57,7 +57,21 @@ const Login = () => {
         const { redirect } = query;
         // eslint-disable-next-line no-console
         console.log("redirect:",redirect)
-        history.push(redirect || '/food');
+        // 根据不同角色重定义路径
+        let redirectPath=''
+        switch (msg.currentAuthority){
+          case "financial_manager":
+            redirectPath='/cost/laborCost'
+            break
+          case "front_office_manager":
+            redirectPath='/takeout'
+            break
+          // chef/admin都是从food页开始
+          default:
+            redirectPath='/food'
+            break
+        }
+        history.push(redirect || redirectPath);
         return;
       }
       if(msg.status==='error'){
