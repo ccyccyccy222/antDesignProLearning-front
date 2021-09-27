@@ -6,6 +6,7 @@
  * For details, please see
  * https://pro.ant.design/docs/deploy
  */
+// 把地址/api/映射到http://localhost:8080
 export default {
   dev: {
     '/api/': {

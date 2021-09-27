@@ -61,7 +61,7 @@ const material = () => {
   }
 
   // 处理查找
-
+  // 查找输入框发生变化时执行的方法
   const inputChange=(event)=>{
     // 使用过滤后的数据
     setIfFilter(true)
@@ -120,6 +120,7 @@ const material = () => {
     {title: '名称', dataIndex: 'name', key: 'name'},
     {
       title: '类别', dataIndex: 'type', key: 'type',
+      // 筛选的种类
       filters: [
         {
           text: '五谷杂粮',
@@ -142,6 +143,7 @@ const material = () => {
           value: '冻货'
         }
       ],
+      // 筛选的方法，若该项的type属性与filters中某个特定的value值相同，则渲染它
       onFilter: (value, record) => record.type.indexOf(value) === 0
     },
     {title: '单位', dataIndex: 'unit', key: 'unit'},
@@ -195,6 +197,7 @@ const material = () => {
           showModal()
         }}>添加材料</Button>
       </div>
+      {/* 根据ifFilter变量的值判断数据来源是原始数据还是过滤后的数据 */}
       <Table
         columns={columns}
         dataSource={ifFilter?filterData:data}

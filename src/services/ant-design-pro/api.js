@@ -84,6 +84,7 @@ export async function getFoodList(options) {
 
 // 修改food菜单
 export async function updateFoodList(body,options) {
+  //调用后端接口localhost:8080/api/updateFoodList
   return request('/api/updateFoodList', {
     method: 'PUT',
     headers: {

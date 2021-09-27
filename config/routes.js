@@ -1,3 +1,5 @@
+// 在路由中加上access属性，值为对应的权限值
+// 这样即可实现不同角色看到的操作列表不一样
 export default [
   {
     name: 'food',

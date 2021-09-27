@@ -1,6 +1,7 @@
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
+// 定义权限变量
 export default function access(initialState) {
   const { currentUser } = initialState || {};
   return {

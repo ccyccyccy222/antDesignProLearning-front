@@ -474,7 +474,9 @@ const laborCost = () => {
                      rules={[{required: true, message: '请输入其他扣款'}]}>
             <InputNumber min={0} max={1000000}
                          onChange={(value) => {
+                           // 修改变量值
                            setOtherOff(value)
+                           // 计算当前的应入账工资
                            sumHandSalary(baseSalary, timeOff, value,overTimeAllowance)
                          }}/>
           </Form.Item>
