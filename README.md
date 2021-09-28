@@ -123,3 +123,9 @@
 ![image-20210928091811757](https://i.loli.net/2021/09/28/KgP8niNcXHkWx3l.png) 
 ![image-20210928091820212](https://i.loli.net/2021/09/28/aFADMEqVTrUHSzi.png)
 
+### 其他文件
+[设计报告和系统讲解视频](https://pan.baidu.com/s/1Xh-GKLIaTJEXi7CI-L3YbA)
+（提取码：y6pe）
+
+[数据库表](https://pan.baidu.com/s/1ZR9xgws39CJ-h9mQ_W70ew)
+（提取码：umog）
