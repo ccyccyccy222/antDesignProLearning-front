@@ -6,7 +6,7 @@
 
 1. **下载代码**
 
-   [Github  antDesignProLearning-front]: https://github.com/ccyccyccy222/antDesignProLearning-front
+   [antDesignProLearning-front](https://github.com/ccyccyccy222/antDesignProLearning-front)
 
 2. **安装依赖，在命令行输入命令```npm install```或```yarn```**
 
@@ -24,12 +24,14 @@
 
      我的项目接口地址默认是```localhost:8080/api/```
 
-   + 其他，参考官方文档
+   + 其他，参考官方文档及教程
 
-     [Ant Design Pro官方文档]: https://pro.ant.design/zh-CN/docs/overview
-     [UmiJS官方文档]: https://umijs.org/zh-CN/docs/getting-started
-     [b站良心教程：React项目全程实录#电商项目#react+UmiJS+Antd Pro#React全套技术#融职教育出品]: https://www.bilibili.com/video/BV1i5411c7xp?p=1
-
+     [Ant Design Pro官方文档](https://pro.ant.design/zh-CN/docs/overview)
+     
+     [UmiJS官方文档](https://umijs.org/zh-CN/docs/getting-started)
+     
+     [b站良心教程：React项目全程实录#电商项目#react+UmiJS+Antd Pro#React全套技术#融职教育出品](https://www.bilibili.com/video/BV1i5411c7xp?p=1
+) 
 4. **输入启动命令**
 
    - 使用mock
@@ -46,7 +48,7 @@
 
 1. **下载代码**
 
-   [Github  hefuNoodles-back]: https://github.com/ccyccyccy222/hefuNoodles-back
+   [hefuNoodles-back](https://github.com/ccyccyccy222/hefuNoodles-back)
 
 2. **按需要修改部分代码**
 
@@ -70,7 +72,7 @@
 
 ### 功能
 
-#####基本列表：菜品管理、原材料管理、外卖管理、费用管理
+##### 基本列表：菜品管理、原材料管理、外卖管理、费用管理
 
 + 菜品管理
 
@@ -117,6 +119,7 @@
 ![image-20210928091803425](https://i.loli.net/2021/09/28/M5VKnxUGwlfFC9e.png) 
 
 其他角色同理
+
 ![image-20210928091811757](https://i.loli.net/2021/09/28/KgP8niNcXHkWx3l.png) 
 ![image-20210928091820212](https://i.loli.net/2021/09/28/aFADMEqVTrUHSzi.png)
 
